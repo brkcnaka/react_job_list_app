@@ -1,12 +1,15 @@
 import React, { useContext } from 'react'
-import { AppContext } from '../provider'
-import SelectInput from './SelectInput'
-import TextInput from './TextInput'
 import styled from 'styled-components'
 
+import { AppContext } from 'provider'
+import SelectInput from 'components/SelectInput'
+import TextInput from 'components/TextInput'
+import sortPriorityLabel from 'constants/sortPriorityLabel.json'
+
 export default function JobsFilters() {
-  const { searchKey, setSearchKey, setFilterToPriority, sortPriorityLabel } =
+  const { searchKey, setSearchKey, setFilterToPriority } =
     useContext(AppContext)
+
   return (
     <Container>
       <InputsWrapper>

@@ -1,25 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SearchSVG } from '../assets/icons'
+
+import { SearchSVG } from 'assets/icons'
+
 export default function TextInput(props) {
   return (
     <>
       <Wrapper>
-        {props.label && <Label>{props.label}</Label>}
+        {props?.label && <Label>{props?.label}</Label>}
         <Input
           onChange={(e) =>
-            props.onChange(
-              e.target.value.replace(/[^A-Za-z0-9 ğüşöçıİĞÜŞÖÇ]/g, '')
+            props?.onChange(
+              e?.target?.value?.replace(/[^A-Za-z0-9 ğüşöçıİĞÜŞÖÇ]/g, '')
             )
           }
-          value={props.value}
+          value={props?.value}
           type="text"
           maxLength={255}
-          placeholder={props.placeHolder || ''}
-          padding={props.searchIcon && '0 10px 0 35px'}
-          disabled={props.disabled || false}
+          placeholder={props?.placeHolder || ''}
+          padding={props?.searchIcon && '0 10px 0 35px'}
+          disabled={props?.disabled || false}
         />
-        {props.searchIcon && (
+        {props?.searchIcon && (
           <SearchIconWrapper>
             <img alt="" width={25} src={SearchSVG} />
           </SearchIconWrapper>
@@ -47,7 +49,7 @@ const Input = styled.input.attrs(() => ({
   border-style: solid;
   border-radius: 3px;
   border-width: 1px;
-  padding: ${(props) => props.padding || '0 10px'};
+  padding: ${(props) => props?.padding || '0 10px'};
   outline: none;
 `
 

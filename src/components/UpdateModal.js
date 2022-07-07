@@ -1,12 +1,14 @@
 import React, { useContext } from 'react'
 import Modal from 'react-bootstrap/Modal'
-import { AppContext } from '../provider'
 import styled from 'styled-components'
-import TextInput from './TextInput'
-import SelectInput from './SelectInput'
-import CustomButton from './CustomButton'
 
-export default function UpdateModal(props) {
+import { AppContext } from 'provider'
+import TextInput from 'components/TextInput'
+import SelectInput from 'components/SelectInput'
+import CustomButton from 'components/CustomButton'
+import { newJobObject } from 'utils/dataUtils'
+
+export default function UpdateModal() {
   const {
     updateModalVisible,
     handleUpdateModal,
@@ -17,11 +19,7 @@ export default function UpdateModal(props) {
   } = useContext(AppContext)
 
   function onChangePriority(e) {
-    const newData = {
-      _id: editModalData._id,
-      jobName: editModalData.jobName,
-      priority: e,
-    }
+    const newData = newJobObject(editModalData?._id, editModalData?.jobName, e)
     setUpdateModalData(newData)
   }
 

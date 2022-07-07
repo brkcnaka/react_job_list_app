@@ -1,16 +1,22 @@
 import React, { createContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+
+import Footer from 'components/Footer'
+import Header from 'components/Header'
+import PriorityServices from 'services/PriorityServices'
+import { getStorage, setStorage } from 'helpers/StorageHelper'
+import {
+  filterDeleteModalData,
+  filterJobByPriority,
+  findEditModalData,
+  newJobObject,
+  searchJobByName,
+  sortByPriortiy,
+  sortJobByName,
+  sortJobByPriority,
+} from 'utils/dataUtils'
 
 export const AppContext = createContext()
-
-const sortPriorityLabel = [
-  { value: 0, label: 'Priority (All)' },
-  { value: 1, label: 'Priority (Urgent)' },
-  { value: 2, label: 'Priority (Regular)' },
-  { value: 3, label: 'Priority (Trivial)' },
-]
 
 export default function AppProvider(props) {
   // New Job Value
@@ -49,32 +55,26 @@ export default function AppProvider(props) {
 
   async function getStorageJobList() {
     setJobList([])
-    const jobList = (await JSON.parse(localStorage.getItem('jobs'))) || []
-    const sortedJobList = await jobList.sort((a, b) => {
-      return a.priority - b.priority
-    })
+    const jobList = (await getStorage('jobs')) || []
+    const sortedJobList = await sortByPriortiy(jobList)
     setJobList(sortedJobList)
-
     return sortedJobList
   }
 
   async function createJob() {
-    if (!jobName.trim() || !addNewPriority) {
+    if (!jobName?.trim() || !addNewPriority) {
       alert('Job name and priority are required!')
       return
     }
-
-    const currentStorage = JSON.parse(localStorage.getItem('jobs')) || []
-    let data = {
-      _id: currentStorage.length + 1,
-      jobName: jobName.trim(),
-      priority: Number(addNewPriority),
-    }
-    localStorage.setItem('jobs', JSON.stringify([...currentStorage, data]))
+    const currentStorage = getStorage('jobs') || []
+    const data = newJobObject(
+      currentStorage?.length + 1,
+      jobName?.trim(),
+      Number(addNewPriority)
+    )
+    setStorage('jobs', [...currentStorage, data])
     const newJobList = [...jobList, data]
-    const sortedJobList = await newJobList.sort((a, b) => {
-      return a.priority - b.priority
-    })
+    const sortedJobList = await sortByPriortiy(newJobList)
     setJobList(sortedJobList)
     setJobName('')
     setAddNewPriority('')
@@ -83,93 +83,41 @@ export default function AppProvider(props) {
 
   async function updateJob() {
     const currentData = await getStorageJobList()
-    const foundedData = await currentData.find((item) => {
-      return item._id === editModalData._id
-    })
-    foundedData.priority = editModalData.priority
-
-    localStorage.setItem('jobs', JSON.stringify(currentData))
+    const foundedData = await findEditModalData(currentData, editModalData?._id)
+    foundedData.priority = editModalData?.priority
+    setStorage('jobs', currentData)
     filter()
     handleUpdateModal()
   }
 
   function deleteJob() {
-    const newData = filterableData.filter((job) => {
-      return job._id !== deleteModalData._id
-    })
-    localStorage.setItem('jobs', JSON.stringify(newData))
+    const newData = filterDeleteModalData(filterableData, deleteModalData?._id)
+    setStorage('jobs', newData)
     filter()
     handleDeleteModal()
   }
 
   async function filterSearch() {
-    let filterData
     const data = await getStorageJobList()
-    if (searchKey === '') {
-      filterData = data
-    } else {
-      filterData = await data?.filter((job) => {
-        return job.jobName.toLowerCase().search(searchKey.toLowerCase()) !== -1
-      })
-    }
-
-    return filterData
+    return searchKey ? await searchJobByName(data, searchKey) : data
   }
 
   async function filterPriority(data) {
-    let filterData
-    if (!filterToPriority) {
-      filterData = data
-    } else {
-      filterData = await data?.filter((job) => {
-        return job.priority === filterToPriority
-      })
-    }
-    return filterData
+    return filterToPriority
+      ? await filterJobByPriority(data, filterToPriority)
+      : data
   }
 
   async function sortName(data) {
-    let filterData
     if (!sortNameType) {
       return data
     }
-    if (sortNameType === 'asc') {
-      filterData = await data.sort(function (a, b) {
-        if (a.jobName < b.jobName) {
-          return -1
-        }
-        if (a.jobName > b.jobName) {
-          return 1
-        }
-        return 0
-      })
-    } else {
-      filterData = await data.sort(function (a, b) {
-        if (b.jobName < a.jobName) {
-          return -1
-        }
-        if (b.jobName > a.jobName) {
-          return 1
-        }
-        return 0
-      })
-    }
-    return filterData
+    return await sortJobByName(data, sortNameType)
   }
 
   async function sortPriorty(data) {
-    let filterData
     if (sortNameType) return data
-    if (!sortPriorityType) {
-      filterData = await data.sort((a, b) => {
-        return a.priority - b.priority
-      })
-    } else {
-      filterData = await data.sort((a, b) => {
-        return b.priority - a.priority
-      })
-    }
-    return filterData
+    return await sortJobByPriority(data, sortPriorityType)
   }
 
   async function filter() {
@@ -184,12 +132,9 @@ export default function AppProvider(props) {
   async function fetchPriorityLabel() {
     try {
       setStatus(1)
-      fetch('http://localhost:3001/prioritylabeldata')
-        .then((response) => response.json())
-        .then((data) => {
-          setPriorityData(data)
-          setStatus(2)
-        })
+      const priorityData = await PriorityServices.fetchPriorityLabel()
+      setPriorityData(priorityData)
+      setStatus(2)
     } catch (error) {
       console.log(error)
       setStatus(3)
@@ -210,7 +155,6 @@ export default function AppProvider(props) {
           // Data
           status,
           priorityLabelData,
-          sortPriorityLabel,
           jobList,
           // Filter
           filterableData,
@@ -241,7 +185,7 @@ export default function AppProvider(props) {
         }}
       >
         <Header />
-        <Wrapper>{props.children}</Wrapper>
+        <Wrapper>{props?.children}</Wrapper>
         <Footer />
       </AppContext.Provider>
     </>

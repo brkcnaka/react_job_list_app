@@ -1,19 +1,23 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { AppContext } from '../provider'
+
+import { AppContext } from 'provider'
+
 export default function SectionTitle(props) {
   const { jobList, filterableData } = useContext(AppContext)
-  if (props.title === 'Job List') {
+
+  if (props?.title === 'Job List') {
     return (
       <Wrapper>
-        <Title>{props.title}</Title>
+        <Title>{props?.title}</Title>
         <Count>
           ({filterableData?.length}/{jobList?.length})
         </Count>
       </Wrapper>
     )
   }
-  return <Title>{props.title}</Title>
+
+  return <Title>{props?.title}</Title>
 }
 const Wrapper = styled.div.attrs(() => ({
   className: 'd-flex align-items-center justify-content-between',

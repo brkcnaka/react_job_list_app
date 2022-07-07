@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
 import Modal from 'react-bootstrap/Modal'
-import { AppContext } from '../provider'
 import styled from 'styled-components'
-import CustomButton from './CustomButton'
-import { WarnSVG } from '../assets/icons'
 
-export default function DeleteModal(props) {
+import { AppContext } from 'provider'
+import CustomButton from 'components/CustomButton'
+import { WarnSVG } from 'assets/icons'
+
+export default function DeleteModal() {
   const { deleteModalVisible, handleDeleteModal, deleteJob } =
     useContext(AppContext)
 

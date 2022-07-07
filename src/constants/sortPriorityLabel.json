@@ -1,0 +1,6 @@
+[
+  { "value": 0, "label": "Priority (All)" },
+  { "value": 1, "label": "Priority (Urgent)" },
+  { "value": 2, "label": "Priority (Regular)" },
+  { "value": 3, "label": "Priority (Trivial)" }
+]

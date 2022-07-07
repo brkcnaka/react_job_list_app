@@ -1,33 +1,33 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { AppContext } from '../provider'
-import fetchDataStatusSwitch from '../utils/fetchDataStatusSwitch'
+
+import { AppContext } from 'provider'
+import fetchDataStatusSwitch from 'utils/fetchDataStatusSwitch'
 
 export default function SelectInput(props) {
   const { addNewPriority, filterPriority, status } = useContext(AppContext)
+
   return (
     <>
-      {props.label && <Label>{props.label}</Label>}
+      {props?.label && <Label>{props?.label}</Label>}
       <Select
-        //value={props.defaultValue || undefined}
-        //value={props.filter ? filterPriority : addNewPriority}
         value={
-          props.filter
+          props?.filter
             ? filterPriority
-            : props.showPlaceHolder
+            : props?.showPlaceHolder
             ? addNewPriority
-            : props.defaultValue
+            : props?.defaultValue
         }
-        onChange={(e) => props.onChange(Number(e.target.value))}
+        onChange={(e) => props?.onChange(Number(e?.target?.value))}
       >
-        {props.showPlaceHolder && (
+        {props?.showPlaceHolder && (
           <option value="">{fetchDataStatusSwitch(status)}</option>
         )}
 
-        {props.options?.map((option, index) => {
+        {props?.options?.map((option, index) => {
           return (
-            <option key={index} value={option.value}>
-              {option.label}
+            <option key={index} value={option?.value}>
+              {option?.label}
             </option>
           )
         })}

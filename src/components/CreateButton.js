@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { AppContext } from '../provider'
+
+import { AppContext } from 'provider'
 
 export default function CreateButton() {
   const { createJob } = useContext(AppContext)

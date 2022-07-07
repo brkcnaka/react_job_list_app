@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { GitSVG } from '../assets/icons'
+
+import { GitSVG } from 'assets/icons'
 
 export default function Footer() {
   return (
@@ -52,6 +53,6 @@ const Copyright = styled.p`
   margin: 0;
   font-size: 13px;
   color: #838383;
-  text-decoration: ${(props) => props.textDecoration || 'none'};
+  text-decoration: ${(props) => props?.textDecoration || 'none'};
   cursor: pointer;
 `

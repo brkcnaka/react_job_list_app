@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-
 import styled from 'styled-components'
-import { AppContext } from '../provider'
-import ActionButton from './ActionButton'
-import prioritySwitch from '../utils/prioritySwitch'
+
+import { AppContext } from 'provider'
+import ActionButton from 'components/ActionButton'
+import prioritySwitch from 'utils/prioritySwitch'
 
 export default function JobTable() {
   const {
@@ -68,7 +68,7 @@ export default function JobTable() {
                       paddingBottom: 20,
                     }}
                   >
-                    <p className="m-0">{job.jobName}</p>
+                    <p className="m-0">{job?.jobName}</p>
                   </td>
                   <td
                     width="30%"
@@ -79,10 +79,10 @@ export default function JobTable() {
                     }}
                   >
                     <PriorityLabelWrapper
-                      color={prioritySwitch(job.priority).color}
+                      color={prioritySwitch(job?.priority).color}
                     >
                       <PriorityLabel>
-                        {prioritySwitch(job.priority).name}
+                        {prioritySwitch(job?.priority).name}
                       </PriorityLabel>
                     </PriorityLabelWrapper>
                   </td>
@@ -153,7 +153,7 @@ const EmptyData = styled.h5.attrs(() => ({
 const PriorityLabelWrapper = styled.div.attrs(() => ({
   className: 'd-flex align-items-center justify-content-center',
 }))`
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => props?.color};
   width: 100px;
   padding: 7px 0;
   border-radius: 3px;

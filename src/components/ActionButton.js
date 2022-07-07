@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EditSVG, DeleteSVG } from '../assets/icons'
+
+import { EditSVG, DeleteSVG } from 'assets/icons'
 
 export default function ActionButton(props) {
   return (
     <>
-      <ButtonWrapper onClick={props.onClick} mr={props.edit && '10px'}>
-        {props.edit && <ActionIcon width={25} src={EditSVG} />}
-        {props.delete && <ActionIcon width={25} src={DeleteSVG} />}
+      <ButtonWrapper onClick={props?.onClick} mr={props?.edit && '10px'}>
+        {props?.edit && <ActionIcon width={25} src={EditSVG} />}
+        {props?.delete && <ActionIcon width={25} src={DeleteSVG} />}
       </ButtonWrapper>
     </>
   )
@@ -24,5 +25,5 @@ const ButtonWrapper = styled.div.attrs(() => ({
   border-radius: 3px;
   background-color: #e7e8e8;
   cursor: pointer;
-  margin-right: ${(props) => props.mr || '0'};
+  margin-right: ${(props) => props?.mr || '0'};
 `
